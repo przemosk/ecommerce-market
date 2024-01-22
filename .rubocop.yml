@@ -6,3 +6,4 @@ AllCops:
     - 'config.ru'
     - 'config/**/*'
     - 'bin/**'
+    - 'db/schema.rb'
