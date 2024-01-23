@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Refactoring tables columns
 class AddRequiredIndexChecksMigration < ActiveRecord::Migration[7.1]
   def change
     remove_column :merchants, :minimum_monthly_fee, :decimal
