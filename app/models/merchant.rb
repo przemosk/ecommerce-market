@@ -8,7 +8,7 @@
 #  disbursement_frequency :integer
 #  email                  :string
 #  live_on                :datetime
-#  minimum_monthly_fee    :decimal(8, 2)    default(0.0)
+#  minimum_monthly_fee    :decimal(, )
 #  name                   :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null

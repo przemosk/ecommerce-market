@@ -8,3 +8,4 @@ AllCops:
     - 'bin/**'
     - 'db/schema.rb'
     - 'lib/tasks/auto_annotate_models.rake'
+    - 'app/services/service_module.rb'
