@@ -17,6 +17,7 @@ class Merchant < ApplicationRecord
   enum disbursement_frequency: { daily: 0, weekly: 1 }
 
   has_many :orders
+  has_many :disbursements
 
   with_options presence: true do
     validate :name, :email, :disbursement_frequency

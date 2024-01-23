@@ -13,8 +13,14 @@
 # Indexes
 #
 #  index_orders_on_merchant_id  (merchant_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (merchant_id => merchants.id)
+#
 class Order < ApplicationRecord
   belongs_to :merchant
+  belongs_to :disbursement, optional: true
 
   # TODO: add some validation
   with_options presence: true do
