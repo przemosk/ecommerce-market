@@ -9,3 +9,9 @@ AllCops:
     - 'db/schema.rb'
     - 'lib/tasks/auto_annotate_models.rake'
     - 'app/services/service_module.rb'
+
+Layout/LineLength:
+  Max: 140
+
+Metrics/BlockLength:
+  Max: 200
