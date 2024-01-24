@@ -21,28 +21,19 @@
 #  fk_rails_...  (disbursement_id => disbursements.id)
 #  fk_rails_...  (merchant_id => merchants.id)
 #
-class Order < ApplicationRecord
-  belongs_to :merchant
-  belongs_to :disbursement, optional: true
-
-  with_options presence: true do
-    validates :amount, :merchant
+FactoryBot.define do
+  factory :order do
+    amount { FFaker::Number.decimal }
   end
 
-  def calculate_payout_amount
-    amount - calculate_commision_fee
+  trait :within_monthly_range do
+    created_at { Date.current.last_month.beginning_of_month..Date.current.last_month.beginning_of_month }
+  end
+  trait :withing_daily_range do
+    created_at { rand(Date.current.ago(3600 * 24).beginning_of_day..Date.current.ago(3600 * 24).end_of_day) }
   end
 
-  # move to separate calculator ?
-  def calculate_commision_fee
-    total = if amount < 50
-              amount * 0.01
-            elsif (50...300).member?(amount)
-              amount * 0.0095
-            else
-              amount * 0.0085
-            end
-
-    total.round(2)
+  trait :withing_weekly_range do
+    created_at { rand(Date.current.ago(3600 * (24 * 8)).beginning_of_day..Date.current.ago(3600 * 24).end_of_day) }
   end
 end
