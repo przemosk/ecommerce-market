@@ -29,6 +29,7 @@ FactoryBot.define do
   trait :within_monthly_range do
     created_at { Date.current.last_month.beginning_of_month..Date.current.last_month.beginning_of_month }
   end
+
   trait :withing_daily_range do
     created_at { rand(Date.current.ago(3600 * 24).beginning_of_day..Date.current.ago(3600 * 24).end_of_day) }
   end

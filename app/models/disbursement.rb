@@ -22,4 +22,21 @@
 class Disbursement < ApplicationRecord
   belongs_to :merchant
   has_many :orders
+
+  def calculate_financial_obligation(order:)
+    transaction do
+      calculate_commision_fee(order_amount: order.calculate_commision_fee)
+      calculate_total_amount(order_amount: order.calculate_payout_amount)
+    end
+  end
+
+  private
+
+  def calculate_total_amount(order_amount:)
+    increment!(:total_amount, order_amount)
+  end
+
+  def calculate_commision_fee(order_amount:)
+    increment!(:commision_amount, order_amount)
+  end
 end

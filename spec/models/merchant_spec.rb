@@ -44,6 +44,49 @@ Rails.describe Merchant, type: :model do
         end
       end
     end
+
+    describe '#calculate_previous_month_fee' do
+      let!(:merchant) { create(:merchant) }
+
+      context 'when there are orders in previous month' do
+        let!(:last_week_disbursement) do
+          create_list(:disbursement, 5, :within_weekly_range, merchant_id: merchant.id, commision_amount: 10.00)
+        end
+        let!(:last_month_disbursement) do
+          create_list(:disbursement, 20, :within_monthly_range, merchant_id: merchant.id, commision_amount: 5.00)
+        end
+
+        it 'calculate amount correctly' do
+          expect(merchant.calculate_last_month_disbursement_fee).to eq (20 * 5.00).round(2)
+        end
+      end
+
+      context 'when there no orders in previus month' do
+        it 'calculate amount correctly' do
+          expect(merchant.disbursements.size).to eq 0
+          expect(merchant.calculate_last_month_disbursement_fee).to eq (0 * 0.00).round(2)
+        end
+      end
+    end
+  end
+
+  describe '#first_disbursement_in_current_month?' do
+    let!(:merchant) { create(:merchant) }
+
+    context 'when there was no disbursement before' do
+      it 'reuturn true' do
+        expect(merchant.first_disbursement_in_current_month?).to eq true
+      end
+    end
+
+    context 'when there was no disbursement before' do
+      let!(:merchant) { create(:merchant) }
+      let!(:disbursement) { create(:disbursement, :within_daily_range, merchant_id: merchant.id) }
+
+      it 'reuturn false' do
+        expect(merchant.first_disbursement_in_current_month?).to eq false
+      end
+    end
   end
 
   describe '#orders_for_daily_disbursement_collection' do
