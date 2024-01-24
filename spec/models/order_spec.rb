@@ -25,36 +25,32 @@ require 'rails_helper'
 
 Rails.describe Order, type: :model do
   let!(:merch) { create(:merchant) }
-  let!(:order) { create(:order, merchant: merch) }
+  let!(:order) { create(:order, merchant: merch, amount: 100.00) }
 
   describe '#calculate_commision_fee' do
-    context 'when amount smaller than 50' do
-      before { order.update_attribute(:amount, 48.88) }
+    context 'call Disbursements::OrderFeeCalculator' do
+      it 'with correct amount' do
+        allow(Disbursements::OrderFeeCalculator)
+          .to receive(:new)
+          .with(amount: 100.00)
+          .and_return(double('OrderFeeCalculator', calculate: 10.00))
 
-      it 'return result multipled by 0.01' do
         result = order.calculate_commision_fee
-
-        expect(result).to eq (order.amount * 0.01).round(2)
+        expect(result).to eq 10.00
       end
     end
+  end
 
-    context 'when amount is between 50 and 300' do
-      before { order.update_attribute(:amount, 150.00) }
+  describe '#calculate_payout_amount' do
+    context 'call Disbursements::OrderPayoutCalculator' do
+      it 'with correct amount' do
+        allow(Disbursements::OrderPayoutCalculator)
+          .to receive(:new)
+          .with(amount: 100.00)
+          .and_return(double('OrderPayoutCalculator', calculate: 10.00))
 
-      it 'return result multipled by 0.0095' do
-        result = order.calculate_commision_fee
-
-        expect(result).to eq (order.amount * 0.0095).round(2)
-      end
-    end
-
-    context 'when bigger than 300' do
-      before { order.update_attribute(:amount, 420.00) }
-
-      it 'return result multipled by 0.0085' do
-        result = order.calculate_commision_fee
-
-        expect(result).to eq (order.amount * 0.0085).round(2)
+        result = order.calculate_payout_amount
+        expect(result).to eq 10.00
       end
     end
   end

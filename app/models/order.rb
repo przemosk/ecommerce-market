@@ -30,19 +30,10 @@ class Order < ApplicationRecord
   end
 
   def calculate_payout_amount
-    amount - calculate_commision_fee
+    Disbursements::OrderPayoutCalculator.new(amount: amount).calculate
   end
 
-  # move to separate calculator ?
   def calculate_commision_fee
-    total = if amount < 50
-              amount * 0.01
-            elsif (50...300).member?(amount)
-              amount * 0.0095
-            else
-              amount * 0.0085
-            end
-
-    total.round(2)
+    Disbursements::OrderFeeCalculator.new(amount: amount).calculate
   end
 end
