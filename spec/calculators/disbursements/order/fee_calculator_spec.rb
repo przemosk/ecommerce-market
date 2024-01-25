@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-Rails.describe Disbursements::OrderFeeCalculator do
+Rails.describe Disbursements::Order::FeeCalculator do
   subject { described_class.new(amount: amount) }
 
   describe '#calculate' do
