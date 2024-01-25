@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 ruby "3.3.0"
 
+gem 'activerecord-import'
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3"
 gem "byebug"
@@ -30,6 +32,8 @@ gem "jbuilder"
 gem "redis", ">= 4.0.1"
 gem "rubocop", require: false
 
+gem 'sidekiq'
+gem "sidekiq-cron"
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
