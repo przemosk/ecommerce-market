@@ -1,0 +1,4 @@
+generate_disbursement:
+  cron: "0 1 * * *"
+  class: "Disbursments::GenerateDailyJob"
+  queue: generate_disbursement
