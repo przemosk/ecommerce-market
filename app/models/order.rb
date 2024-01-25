@@ -30,10 +30,10 @@ class Order < ApplicationRecord
   end
 
   def calculate_payout_amount
-    Disbursements::OrderPayoutCalculator.new(amount: amount).calculate
+    Disbursements::Order::PayoutCalculator.new(amount: amount).calculate
   end
 
   def calculate_commision_fee
-    Disbursements::OrderFeeCalculator.new(amount: amount).calculate
+    Disbursements::Order::FeeCalculator.new(amount: amount).calculate
   end
 end

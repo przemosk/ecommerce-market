@@ -27,7 +27,7 @@ FactoryBot.define do
   end
 
   trait :within_monthly_range do
-    created_at { Date.current.last_month.beginning_of_month..Date.current.last_month.beginning_of_month }
+    created_at { Date.current.last_month.beginning_of_month..Date.current.last_month.end_of_month }
   end
 
   trait :withing_daily_range do

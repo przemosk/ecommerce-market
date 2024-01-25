@@ -21,10 +21,15 @@ class Merchant < ApplicationRecord
 
   scope :with_daily_payouts, -> { where(disbursement_frequency: 0) }
   scope :with_weekly_payouts, -> { where(disbursement_frequency: 1).where('EXTRACT(DOW FROM live_on) = ?', Date.current.wday) }
+  scope :with_daily_or_weekly_payouts, -> { with_daily_payouts.or(with_weekly_payouts) }
+
+  with_options presence: true do
+    validates :email, :disbursement_frequency, :live_on, :name
+  end
 
   def calculate_last_month_disbursement_fee
     disbursements
-      .where(disbursements: { created_at: DateTime.current.last_month.beginning_of_month..DateTime.current.last_month.end_of_month })
+      .where(disbursements: { created_at: Date.current.last_month.beginning_of_month..Date.current.last_month.end_of_month })
       .pluck(:commision_amount)
       .compact
       .sum
@@ -32,7 +37,7 @@ class Merchant < ApplicationRecord
   end
 
   def first_disbursement_in_current_month?
-    disbursements.where(created_at: DateTime.current.beginning_of_month..DateTime.current).empty?
+    disbursements.where(created_at: Date.current.beginning_of_month..Date.current.end_of_day).size == 1
   end
 
   # here is assumption that we exclude current day (thats the reason of ), because we targeting for orders from day before we execute flow

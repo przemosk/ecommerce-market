@@ -30,10 +30,10 @@ Rails.describe Order, type: :model do
   describe '#calculate_commision_fee' do
     context 'call Disbursements::OrderFeeCalculator' do
       it 'with correct amount' do
-        allow(Disbursements::OrderFeeCalculator)
+        allow(Disbursements::Order::FeeCalculator)
           .to receive(:new)
           .with(amount: 100.00)
-          .and_return(double('OrderFeeCalculator', calculate: 10.00))
+          .and_return(double('Disbursements::Order::PayoutCalculator', calculate: 10.00))
 
         result = order.calculate_commision_fee
         expect(result).to eq 10.00
@@ -44,10 +44,10 @@ Rails.describe Order, type: :model do
   describe '#calculate_payout_amount' do
     context 'call Disbursements::OrderPayoutCalculator' do
       it 'with correct amount' do
-        allow(Disbursements::OrderPayoutCalculator)
+        allow(Disbursements::Order::PayoutCalculator)
           .to receive(:new)
           .with(amount: 100.00)
-          .and_return(double('OrderPayoutCalculator', calculate: 10.00))
+          .and_return(double('Disbursements::Order::PayoutCalculator', calculate: 10.00))
 
         result = order.calculate_payout_amount
         expect(result).to eq 10.00

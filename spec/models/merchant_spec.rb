@@ -74,15 +74,16 @@ Rails.describe Merchant, type: :model do
     let!(:merchant) { create(:merchant) }
 
     context 'when there was no disbursement before' do
+      before { merchant.disbursements.create! }
       it 'reuturn true' do
         expect(merchant.first_disbursement_in_current_month?).to eq true
       end
     end
 
-    context 'when there was no disbursement before' do
-      let!(:merchant) { create(:merchant) }
-      let!(:disbursement) { create(:disbursement, :within_daily_range, merchant_id: merchant.id) }
+    context 'when there was disbursement before' do
+      let!(:disbursement) { create(:disbursement, :withing_daily_range, merchant_id: merchant.id) }
 
+      before { merchant.disbursements.create! }
       it 'reuturn false' do
         expect(merchant.first_disbursement_in_current_month?).to eq false
       end
