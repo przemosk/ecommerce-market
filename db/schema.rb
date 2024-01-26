@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_24_191811) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_26_015841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_24_191811) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "minimum_monthly_fee", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "reference"
     t.index ["merchant_id"], name: "index_disbursements_on_merchant_id"
   end
 
