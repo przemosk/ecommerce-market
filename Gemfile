@@ -55,6 +55,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'ffaker'
   gem 'rspec-rails', '~> 6.1.0'
+  gem 'rspec-sidekiq'
 end
 
 group :development do
