@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Disbursments
+module Disbursements
   # ServiceObject for creating daily Disbursements
   # Based on Merchant with daily and weekly ( matched to today weekday )
   class Generate

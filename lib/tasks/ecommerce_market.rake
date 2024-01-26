@@ -4,7 +4,7 @@ require 'csv'
 
 namespace :ecommerce_market do
   desc 'Importing Merchant from CSV file'
-  task import_merchant: :environment do
+  task import_merchants: :environment do
     merchants = []
     CSV.parse(csv_file(filename: 'merchants.csv'), headers: true, col_sep: ';') do |row|
       merchants << create_merchant_instance(row: row)
@@ -31,25 +31,32 @@ namespace :ecommerce_market do
 
   desc 'Building Disbursements for Orders'
   task build_disbursements: :environment do
-    abort('please run ecommerce_market:import_orders before') if Order.all.empty?
-
-    Merchant.joins(:orders).where(orders: { disbursement_id: nil }).find_in_batches(batch_size: 1_000) do |merchants_batch|
-      merchants_batch.each do |merchant|
-        merchant_orders = merchant.orders.group_by(&:created_at)
-
-        merchant_orders.each do |date, orders|
-          disbursement = merchant.disbursements.create!(created_at: date)
-
-          disbursement.calculate_minimum_monthly_fee if merchant.disbursements.where(created_at: date.to_date.beginning_of_month..date).size == 1
-
-          orders.map do |order|
-            puts "processing order: #{order.id}"
-            disbursement.add_order(order: order)
-          end
-        end
-      end
-    end
+    Disbursements::Regenerate.call
   end
+
+  desc 'Generate some stats'
+  task show_stats: :environment do
+    grouped_disbursments = Disbursement.all.group_by { |item| item.created_at.strftime('%Y') }
+
+    result = grouped_disbursments.map do |index, items|
+      {
+        year: index,
+        number_of_disbursements: items.count,
+        amount_disbursed_to_merchants: format_money(amount: items.pluck(:total_amount).sum.to_f.round(2)),
+        amount_of_order_fees: format_money(amount: items.pluck(:commision_amount).sum.to_f.round(2)),
+        charged_num_of_monthly_fee: items.pluck(:minimum_monthly_fee).select { |x| x > 0.0 }.size,
+        amount_of_monthly_fee: format_money(amount: items.pluck(:minimum_monthly_fee).sum.to_f.round(2))
+      }
+    end
+
+    puts result
+  end
+
+  # rubocop:disable Style/FormatString
+  def format_money(amount:)
+    sprintf('%.2f', amount).gsub(/(\d)(?=(\d{3})+(?!\d))/, '\\1,')
+  end
+  # rubocop:enable Style/FormatString
 
   def create_order_instance(row:)
     Order.new(
