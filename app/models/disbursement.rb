@@ -7,6 +7,7 @@
 #  id                  :uuid             not null, primary key
 #  commision_amount    :decimal(10, 2)   default(0.0), not null
 #  minimum_monthly_fee :decimal(10, 2)   default(0.0), not null
+#  reference           :string
 #  total_amount        :decimal(10, 2)   default(0.0), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -21,18 +22,19 @@
 #  fk_rails_...  (merchant_id => merchants.id)
 #
 class Disbursement < ApplicationRecord
-  belongs_to :merchant
-  has_many :orders
+  belongs_to :merchant, inverse_of: :disbursements
+  has_many :orders, inverse_of: :disbursement, dependent: :nullify
 
-  # TODO: add reference attr
+  after_initialize :generate_reference_number
+
   with_options presence: true do
-    validates :merchant
+    validates :merchant, :reference
   end
 
   def add_order(order:)
     calculate_financial_obligation(order: order)
 
-    order.update_attribute(:disbursement_id, id)
+    order.update_attribute!(:disbursement_id, id)
   end
 
   def calculate_minimum_monthly_fee
@@ -52,6 +54,10 @@ class Disbursement < ApplicationRecord
   end
 
   private
+
+  def generate_reference_number
+    self.reference ||= SecureRandom.hex(6)
+  end
 
   def calculate_total_amount(order_amount:)
     increment!(:total_amount, order_amount)

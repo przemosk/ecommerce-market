@@ -9,7 +9,7 @@ Rails.describe Disbursements::Order::FeeCalculator do
     context 'when amount smaller than 50' do
       let(:amount) { 48.88 }
 
-      it 'return result multipled by 0.01' do
+      it 'return result multiplied by 0.01' do
         result = subject.calculate
 
         expect(result).to eq (amount * 0.01).round(2)
@@ -19,7 +19,7 @@ Rails.describe Disbursements::Order::FeeCalculator do
     context 'when amount is between 50 and 300' do
       let(:amount) { 150.00 }
 
-      it 'return result multipled by 0.0095' do
+      it 'return result multiplied by 0.0095' do
         result = subject.calculate
 
         expect(result).to eq (amount * 0.0095).round(2)
@@ -29,7 +29,7 @@ Rails.describe Disbursements::Order::FeeCalculator do
     context 'when bigger than 300' do
       let(:amount) { 420.00 }
 
-      it 'return result multipled by 0.0085' do
+      it 'return result multiplied by 0.0085' do
         result = subject.calculate
 
         expect(result).to eq (amount * 0.0085).round(2)

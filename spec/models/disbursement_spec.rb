@@ -7,6 +7,7 @@
 #  id                  :uuid             not null, primary key
 #  commision_amount    :decimal(10, 2)   default(0.0), not null
 #  minimum_monthly_fee :decimal(10, 2)   default(0.0), not null
+#  reference           :string
 #  total_amount        :decimal(10, 2)   default(0.0), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -23,6 +24,15 @@
 require 'rails_helper'
 
 Rails.describe Disbursement, type: :model do
+  describe '#generate_reference_number' do
+    context 'after instanace initialization' do
+      it 'generate reference number' do
+        res = described_class.new
+        expect(res.reference).to be_present
+      end
+    end
+  end
+
   describe '#add_order' do
     let!(:merchant) { create(:merchant) }
     let!(:disbursement) { create(:disbursement, merchant: merchant) }

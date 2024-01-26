@@ -26,15 +26,19 @@ FactoryBot.define do
     amount { FFaker::Number.decimal }
   end
 
-  trait :within_monthly_range do
-    created_at { Date.current.last_month.beginning_of_month..Date.current.last_month.end_of_month }
+  trait :with_current_month_range do
+    created_at { rand(Date.current.beginning_of_month..Date.current) }
   end
 
-  trait :withing_daily_range do
+  trait :within_previous_month_range do
+    created_at { rand(Date.current.last_month.beginning_of_month..Date.current.last_month.end_of_month) }
+  end
+
+  trait :within_daily_range do
     created_at { rand(Date.current.ago(3600 * 24).beginning_of_day..Date.current.ago(3600 * 24).end_of_day) }
   end
 
-  trait :withing_weekly_range do
+  trait :within_weekly_range do
     created_at { rand(Date.current.ago(3600 * (24 * 8)).beginning_of_day..Date.current.ago(3600 * 24).end_of_day) }
   end
 end

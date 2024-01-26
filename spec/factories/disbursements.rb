@@ -7,6 +7,7 @@
 #  id                  :uuid             not null, primary key
 #  commision_amount    :decimal(10, 2)   default(0.0), not null
 #  minimum_monthly_fee :decimal(10, 2)   default(0.0), not null
+#  reference           :string
 #  total_amount        :decimal(10, 2)   default(0.0), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -23,6 +24,7 @@
 FactoryBot.define do
   factory :disbursement do
     merchant { create(:merchant) }
+    reference { SecureRandom.hex(6) }
     total_amount { 0.0 }
     commision_amount { 0 }
 

@@ -22,8 +22,8 @@
 #  fk_rails_...  (merchant_id => merchants.id)
 #
 class Order < ApplicationRecord
-  belongs_to :merchant
-  belongs_to :disbursement, optional: true
+  belongs_to :merchant, inverse_of: :orders
+  belongs_to :disbursement, inverse_of: :orders, optional: true
 
   with_options presence: true do
     validates :amount, :merchant

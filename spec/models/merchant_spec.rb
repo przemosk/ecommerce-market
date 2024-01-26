@@ -53,7 +53,7 @@ Rails.describe Merchant, type: :model do
           create_list(:disbursement, 5, :within_weekly_range, merchant_id: merchant.id, commision_amount: 10.00)
         end
         let!(:last_month_disbursement) do
-          create_list(:disbursement, 20, :within_monthly_range, merchant_id: merchant.id, commision_amount: 5.00)
+          create_list(:disbursement, 20, :within_previous_month_range, merchant_id: merchant.id, commision_amount: 5.00)
         end
 
         it 'calculate amount correctly' do
@@ -81,7 +81,7 @@ Rails.describe Merchant, type: :model do
     end
 
     context 'when there was disbursement before' do
-      let!(:disbursement) { create(:disbursement, :withing_daily_range, merchant_id: merchant.id) }
+      let!(:disbursement) { create(:disbursement, :within_daily_range, merchant_id: merchant.id) }
 
       before { merchant.disbursements.create! }
       it 'reuturn false' do
@@ -93,8 +93,10 @@ Rails.describe Merchant, type: :model do
   describe '#orders_for_daily_disbursement_collection' do
     let!(:merchant) { create(:merchant) }
     let!(:disbursement) { create(:disbursement, merchant_id: merchant.id) }
-    let!(:last_week_orders) { create_list(:order, 2, :withing_daily_range, merchant_id: merchant.id, disbursement_id: nil) }
-    let!(:last_month_orders) { create_list(:order, 3, :within_monthly_range, merchant_id: merchant.id, disbursement_id: disbursement.id) }
+    let!(:last_week_orders) { create_list(:order, 2, :within_daily_range, merchant_id: merchant.id, disbursement_id: nil) }
+    let!(:last_month_orders) do
+      create_list(:order, 3, :within_previous_month_range, merchant_id: merchant.id, disbursement_id: disbursement.id)
+    end
 
     context 'when merchant orders' do
       it 'return merchant orders from yesterday within disbrusement_id: nil' do
@@ -109,8 +111,10 @@ Rails.describe Merchant, type: :model do
   describe '#orders_for_weekly_disbursement_collection' do
     let!(:merchant) { create(:merchant) }
     let!(:disbursement) { create(:disbursement, merchant_id: merchant.id) }
-    let!(:last_week_orders) { create_list(:order, 4, :withing_weekly_range, merchant_id: merchant.id, disbursement_id: nil) }
-    let!(:last_month_orders) { create_list(:order, 2, :within_monthly_range, merchant_id: merchant.id, disbursement_id: disbursement.id) }
+    let!(:last_week_orders) { create_list(:order, 4, :within_weekly_range, merchant_id: merchant.id, disbursement_id: nil) }
+    let!(:last_month_orders) do
+      create_list(:order, 2, :within_previous_month_range, merchant_id: merchant.id, disbursement_id: disbursement.id)
+    end
 
     context 'when merchant orders' do
       it 'return merchant orders from last week within disbrusement_id: nil' do
