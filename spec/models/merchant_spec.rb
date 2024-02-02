@@ -49,9 +49,6 @@ Rails.describe Merchant, type: :model do
       let!(:merchant) { create(:merchant) }
 
       context 'when there are orders in previous month' do
-        let!(:last_week_disbursement) do
-          create_list(:disbursement, 5, :within_weekly_range, merchant_id: merchant.id, commision_amount: 10.00)
-        end
         let!(:last_month_disbursement) do
           create_list(:disbursement, 20, :within_previous_month_range, merchant_id: merchant.id, commision_amount: 5.00)
         end

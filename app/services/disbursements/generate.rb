@@ -9,7 +9,11 @@ module Disbursements
     def call
       Merchant.with_daily_or_weekly_payouts.find_each do |merchant|
         ActiveRecord::Base.transaction do
-          disbursement = merchant.disbursements.create!
+          disbursement = begin
+            merchant.disbursements.create!
+          rescue ActiveRecord::RecordInvalid => e
+            failure(merchant, e)
+          end
 
           disbursement.calculate_minimum_monthly_fee if merchant.first_disbursement_in_current_month?
 
@@ -24,6 +28,8 @@ module Disbursements
           end
         end
       end
+
+      success(true)
     end
   end
 end

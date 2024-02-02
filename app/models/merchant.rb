@@ -31,7 +31,6 @@ class Merchant < ApplicationRecord
     disbursements
       .where(disbursements: { created_at: Date.current.last_month.beginning_of_month..Date.current.last_month.end_of_month })
       .pluck(:commision_amount)
-      .compact
       .sum
       .round(2)
   end
