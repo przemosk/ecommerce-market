@@ -2,13 +2,13 @@ AllCops:
   NewCops: enable
 
   Exclude:
-    - 'Gemfile'
-    - 'config.ru'
-    - 'config/**/*'
-    - 'bin/**'
-    - 'db/schema.rb'
-    - 'lib/tasks/auto_annotate_models.rake'
-    - 'app/services/service_module.rb'
+    - "Gemfile"
+    - "config.ru"
+    - "config/**/*"
+    - "bin/**"
+    - "db/schema.rb"
+    - "lib/tasks/auto_annotate_models.rake"
+    - "app/services/service_module.rb"
 
 Layout/LineLength:
   Max: 140
@@ -24,3 +24,6 @@ Style/HashSyntax:
 
 Lint/MissingSuper:
   Enabled: false
+
+Metrics/AbcSize:
+  Max: 30

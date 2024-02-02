@@ -6,7 +6,6 @@ module Disbursements
   class Regenerate
     prepend ::ServiceModule::Base
 
-    # rubocop:disable Metrics/AbcSize
     def call
       orders_grouped_by_date = ::Order.includes(:merchant).where(disbursement_id: nil).group_by(&:created_at)
       unique_dates_sorted = orders_grouped_by_date.keys.sort
@@ -27,6 +26,5 @@ module Disbursements
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
